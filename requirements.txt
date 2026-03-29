@@ -1,0 +1,24 @@
+# --- Core AI & Data Science ---
+pandas                  # The spreadsheet manager
+numpy                   # The math engine
+matplotlib              # The graphing tool
+joblib                  # The "Deep Freezer" for binary files
+
+# --- Advanced Utilities ---
+python-box              # Powers ConfigBox (Dot-notation access)
+ensure                  # Powers @ensure_annotations (Type safety)
+pyYAML                  # Powers read_yaml (Config management)
+tqdm                    # Powers your Progress Bars
+scipy                   # Advanced math for image processing
+
+# --- Backend & Web ---
+fastapi                 # The high-speed kitchen (API)
+uvicorn                 # The engine that runs FastAPI
+python-multipart        # Allows users to upload CT scan files
+Jinja2                  # The HTML menu designer
+
+# --- MLOps & Tracking ---
+dvc                     # Data versioning (GitHub for big files)
+mlflow                  # The digital lab notebook
+dagshub                 # The central hub for your experiments
+python-dotenv           # Keeps your secret keys safe
