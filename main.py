@@ -1,6 +1,3 @@
-def main():
-    print("Hello from hhmi-janelia-ai-engineer!")
+from src.task2 import logger
 
-
-if __name__ == "__main__":
-    main()
+logger.info("Checking logger....")
