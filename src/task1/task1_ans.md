@@ -89,3 +89,4 @@ This README provides a evaluation of the `trainer.py` proof-of-concept. It answe
  - Save models and outputs in a folder with unique names with timestamps.
  - Implement `early stopping`, `dropouts` for handeling model overfit. Determine the  `max_len` from the current dataset dynamically.
  - Keep parameters with results output to understand and keep track of experiments.
+ - This [Github repo](https://github.com/captainKLSH/HHMI_Janelia_AI_Engineer) follows a modular architecture, simialar to proposed one that separates configuration, data logic, and model execution.
