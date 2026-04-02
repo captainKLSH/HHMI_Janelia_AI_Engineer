@@ -22,3 +22,9 @@ dvc                     # Data versioning (GitHub for big files)
 mlflow                  # The digital lab notebook
 dagshub                 # The central hub for your experiments
 python-dotenv           # Keeps your secret keys safe
+
+zarr
+s3fs
+fibsem-tools
+xarray
+ipykernel

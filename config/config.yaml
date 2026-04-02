@@ -1,0 +1,6 @@
+artifacts_root: artifacts
+
+data_ingestion:
+    root_dir: artifacts/data_ingestion
+    source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
+    local_data_file: artifacts/data_ingestion/liver_chunk.npy

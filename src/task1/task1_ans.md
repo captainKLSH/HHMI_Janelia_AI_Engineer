@@ -28,22 +28,22 @@ This README provides a evaluation of the `trainer.py` proof-of-concept. It answe
  ```bash
  📦root_dir
  ┣ 📂config
- ┃ ┗ 📜config.yaml.         #Stores all file paths
- ┣ 📂frontend               #User Interface
+ ┃ ┗ 📜config.yaml.             #Stores all file paths
+ ┣ 📂frontend                   #User Interface
  ┃ ┣ 📂static
  ┃ ┃ ┣ 📜home.css
  ┃ ┃ ┗ 📜main.js
  ┃ ┗ 📜index.html
  ┣ 📂logs
- ┃ ┗ 📜running_logs.log
+ ┃ ┗ 📜running_logs.log         #Keep Experimental logs
  ┣ 📂research                   #Experimental Sandbox
  ┃ ┣ 📜01_data_ingestion.ipynb  #Experimenting with downloading or loading
  ┃ ┣ 📜02_data_transform.ipynb  # Experimenting Data tranformations
  ┃ ┣ 📜03_model_building.ipynb  # Designing the Model architecture
  ┃ ┣ 📜04_model_training.ipynb  #Testing the training loop on a small subset of data.
- ┃ ┗ 📜05_test.ipynb        #Running the inference tests and visualizations
- ┣ 📂outputs                # Save outputs such as .json/.csv
- ┣ 📂models                 #Save models such as .pt/.pkl
+ ┃ ┗ 📜05_test.ipynb            #Running the inference tests and visualizations
+ ┣ 📂outputs                    # Save outputs such as .json/.csv
+ ┣ 📂models                     #Save models such as .pt/.pkl
  ┣ 📂src
  ┃ ┣ 📂test2
  ┃ ┃ ┣ 📂components
@@ -59,7 +59,7 @@ This README provides a evaluation of the `trainer.py` proof-of-concept. It answe
  ┃ ┃ ┃ ┣ 📜__init__.py
  ┃ ┃ ┃ ┗ 📜configuration.py     #The logic that reads 'config.yaml' and prepares the paths for the components.
  ┃ ┃ ┣ 📂constants
- ┃ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┃ ┃ ┗ 📜__init__.py          #Keep constants initialized
  ┃ ┃ ┣ 📂entity
  ┃ ┃ ┃ ┣ 📜__init__.py
  ┃ ┃ ┃ ┗ 📜config.py            #Defines Dataclasses. This ensures input/output datatypes
@@ -70,23 +70,23 @@ This README provides a evaluation of the `trainer.py` proof-of-concept. It answe
  ┃ ┃ ┃ ┣ 📜stage3.py
  ┃ ┃ ┣ 📂utils
  ┃ ┃ ┃ ┣ 📜__init__.py
- ┃ ┃ ┃ ┗ 📜common.py
+ ┃ ┃ ┃ ┗ 📜common.py            #Handles methods which are reusable in different modules
  ┃ ┃ ┗ 📜__init__.py
  ┣ 📜.gitignore
- ┣ 📜.python-version
- ┣ 📜README.md
- ┣ 📜app.py         #This connects your AI backend to your frontend.
- ┣ 📜dvc.yaml       #Data Version Control.
- ┣ 📜main.py        #The Orchestrator. Runs all the pipeline stages in order.
- ┣ 📜params.yaml    #Stores ML hyperparameters (Learning rate, Patch size, Epochs, Batch size).
- ┣ 📜pyproject.toml # dependencies list manager
- ┣ 📜requirements.txt # dependency script
- ┣ 📜setup.py
- ┣ 📜template.py    #A script you ran once to build this entire folder structure automatically.
- ┗ 📜uv.lock        #Ensures every computer running this has the exact same libraries.
+ ┣ 📜.python-version            # Project python version track-list
+ ┣ 📜README.md                  # Project Information and instructions
+ ┣ 📜app.py                     #This connects your AI backend to your frontend.
+ ┣ 📜dvc.yaml                   #Data Version Control.
+ ┣ 📜main.py                    #The Orchestrator. Runs all the pipeline stages in order.
+ ┣ 📜params.yaml                #Stores ML hyperparameters (Learning rate, Patch size, Epochs, Batch size).
+ ┣ 📜pyproject.toml             # dependencies list manager
+ ┣ 📜requirements.txt           # dependency script
+ ┣ 📜setup.py                   #Helpful if you want to change your project into package
+ ┣ 📜template.py                #A script you ran once to build this entire folder structure automatically.
+ ┗ 📜uv.lock                    #Ensures every computer running this has the exact same libraries.
  ```
  **This structure give full modularity and helps other team to implement, scale for large project and find errors easily**
  - Save models and outputs in a folder with unique names with timestamps.
  - Implement `early stopping`, `dropouts` for handeling model overfit. Determine the  `max_len` from the current dataset dynamically.
  - Keep parameters with results output to understand and keep track of experiments.
- - This [Github repo](https://github.com/captainKLSH/HHMI_Janelia_AI_Engineer) follows a modular architecture, simialar to proposed one that separates configuration, data logic, and model execution.
+ - This [Github repo](https://github.com/captainKLSH/HHMI_Janelia_AI_Engineer) follows a modular architecture, similar to proposed one that separates configuration, data logic, and model execution.
