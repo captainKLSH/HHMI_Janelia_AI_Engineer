@@ -3,4 +3,14 @@ artifacts_root: artifacts
 data_ingestion:
     root_dir: artifacts/data_ingestion
     source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
-    local_data_file: artifacts/data_ingestion/liver_chunk.npy
+    local_data_file: artifacts/data_ingestion/liver_chunk_s0.npy
+    OUTPUT: OUTPUT/inputdata_summary.txt
+
+model_build:
+    root_dir: artifacts/models
+    model_name: dinov3_vits16plus
+    REPO: facebookresearch/dinov3
+    M_weight: artifacts/models/dinov3_vits16plus_pretrain_lvd1689m-4057cbaa.pth
+    Hug_MW:  facebook/dinov3-vits16plus-pretrain-lvd1689m
+    Hug_save: artifacts/models/Hugweights
+    OUTPUT: OUTPUT/model_summary.txt

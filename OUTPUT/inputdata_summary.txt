@@ -1,0 +1,104 @@
+Node s0 Value: <xarray.DataTree 's0'>
+Group: /s0
+    Dimensions:  (z: 8932, y: 12728, x: 12747)
+    Coordinates:
+      * z        (z) float64 71kB 0.0 8.0 16.0 ... 7.143e+04 7.144e+04 7.145e+04
+      * y        (y) float64 102kB 0.0 8.0 16.0 ... 1.018e+05 1.018e+05 1.018e+05
+      * x        (x) float64 102kB 0.0 8.0 16.0 24.0 ... 1.02e+05 1.02e+05 1.02e+05
+    Data variables:
+        data     (z, y, x) uint8 1TB dask.array<chunksize=(448, 448, 448), meta=np.ndarray>
+------------------------------
+
+--- Analysis Run: 2026-04-03 21:48:03 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s0.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
+Node s1 Value: <xarray.DataTree 's1'>
+Group: /s1
+    Dimensions:  (z: 4466, y: 6364, x: 6373)
+    Coordinates:
+      * z        (z) float64 36kB 4.0 20.0 36.0 ... 7.141e+04 7.143e+04 7.144e+04
+      * y        (y) float64 51kB 4.0 20.0 36.0 ... 1.018e+05 1.018e+05 1.018e+05
+      * x        (x) float64 51kB 4.0 20.0 36.0 ... 1.019e+05 1.019e+05 1.02e+05
+    Data variables:
+        data     (z, y, x) uint8 181GB dask.array<chunksize=(448, 448, 448), meta=np.ndarray>
+------------------------------
+
+--- Analysis Run: 2026-04-03 22:06:23 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s1.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
+
+--- Analysis Run: 2026-04-03 22:08:21 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s1.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
+Node s1 Value: <xarray.DataTree 's1'>
+Group: /s1
+    Dimensions:  (z: 4466, y: 6364, x: 6373)
+    Coordinates:
+      * z        (z) float64 36kB 4.0 20.0 36.0 ... 7.141e+04 7.143e+04 7.144e+04
+      * y        (y) float64 51kB 4.0 20.0 36.0 ... 1.018e+05 1.018e+05 1.018e+05
+      * x        (x) float64 51kB 4.0 20.0 36.0 ... 1.019e+05 1.019e+05 1.02e+05
+    Data variables:
+        data     (z, y, x) uint8 181GB dask.array<chunksize=(448, 448, 448), meta=np.ndarray>
+------------------------------
+
+--- Analysis Run: 2026-04-03 22:09:00 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s1.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
+Node s0 Value: <xarray.DataTree 's0'>
+Group: /s0
+    Dimensions:  (z: 8932, y: 12728, x: 12747)
+    Coordinates:
+      * z        (z) float64 71kB 0.0 8.0 16.0 ... 7.143e+04 7.144e+04 7.145e+04
+      * y        (y) float64 102kB 0.0 8.0 16.0 ... 1.018e+05 1.018e+05 1.018e+05
+      * x        (x) float64 102kB 0.0 8.0 16.0 24.0 ... 1.02e+05 1.02e+05 1.02e+05
+    Data variables:
+        data     (z, y, x) uint8 1TB dask.array<chunksize=(448, 448, 448), meta=np.ndarray>
+------------------------------
+
+--- Analysis Run: 2026-04-03 22:10:17 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s0.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
+Node s0 Value: <xarray.DataTree 's0'>
+Group: /s0
+    Dimensions:  (z: 8932, y: 12728, x: 12747)
+    Coordinates:
+      * z        (z) float64 71kB 0.0 8.0 16.0 ... 7.143e+04 7.144e+04 7.145e+04
+      * y        (y) float64 102kB 0.0 8.0 16.0 ... 1.018e+05 1.018e+05 1.018e+05
+      * x        (x) float64 102kB 0.0 8.0 16.0 24.0 ... 1.02e+05 1.02e+05 1.02e+05
+    Data variables:
+        data     (z, y, x) uint8 1TB dask.array<chunksize=(448, 448, 448), meta=np.ndarray>
+------------------------------
+
+--- Analysis Run: 2026-04-03 22:11:28 ---
+Data Summary for artifacts/data_ingestion/liver_chunk_s0.npy
+------------------------------
+Shape: [448, 448, 448]
+Dtype: uint8
+Total Elements: 89,915,392
+Memory: 85.75 MB
+------------------------------
