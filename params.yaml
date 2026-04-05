@@ -1,8 +1,13 @@
-scale: s1
+#data ingestion
+scale: s0
+z_idx: [4600,5048]
+y_idx: [6000,6448]
+x_idx: [6000,6448]
+#model building
 input_size_test: [2, 3, 448, 448]
 patch_size: 16
 INPUT_SIZE: 448
 N_REGISTERS: 5
 EMBED_DIM: 384
 Slice_BATCH_size: 2
-Slice_use: 50
+Slice_use: 5

@@ -2,12 +2,12 @@ artifacts_root: artifacts
 
 data_ingestion:
     root_dir: artifacts/data_ingestion
-    # source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
+    source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
     # source_url: s3://janelia-cosem-datasets/jrc_jurkat-1/jrc_jurkat-1.n5/em/fibsem-uint16/
-    source_url: s3://janelia-cosem-datasets/jrc_hela-21/jrc_hela-21.n5/em/fibsem-uint8/
-    # local_data_file: artifacts/data_ingestion/liver_chunk_s0.npy
+    # source_url: s3://janelia-cosem-datasets/jrc_hela-21/jrc_hela-21.n5/em/fibsem-uint8/
+    local_data_file: artifacts/data_ingestion/
     # local_data_file: artifacts/data_ingestion/T_cell_chunk_s0.npy
-    local_data_file: artifacts/data_ingestion/hela_cell_chunk_s1.npy
+    # local_data_file: artifacts/data_ingestion/hela_cell_chunk_s1.npy
     OUTPUT: OUTPUT/inputdata_summary.txt
 
 model_build:
@@ -16,7 +16,13 @@ model_build:
     REPO: facebookresearch/dinov3
     M_weight: artifacts/models/dinov3_vits16plus_pretrain_lvd1689m-4057cbaa.pth
     Hug_MW:  facebook/dinov3-vits16plus-pretrain-lvd1689m
-    local_data_file: artifacts/data_ingestion/liver_chunk_s1.npy
+    # local_data_file: artifacts/data_ingestion/hela_cell_chunk_s1.npy
+    local_data_file: artifacts/data_ingestion/
     Hug_save: artifacts/models/Hugweights
-    Dense_embedding: artifacts/models/dense_embeddings_50_slices.pt
+    # Dense_embedding: artifacts/models/dense_embeddings_50_slices_hela_s1.pt
+    Dense_embedding: artifacts/models/
     OUTPUT: OUTPUT/
+
+viz:
+    root_dir: artifacts/retri_viz
+
