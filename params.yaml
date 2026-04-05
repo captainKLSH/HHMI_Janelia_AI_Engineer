@@ -1,2 +1,8 @@
-scale: s0
-input_size: [1, 3, 448, 448]
+scale: s1
+input_size_test: [2, 3, 448, 448]
+patch_size: 16
+INPUT_SIZE: 448
+N_REGISTERS: 5
+EMBED_DIM: 384
+Slice_BATCH_size: 2
+Slice_use: 50

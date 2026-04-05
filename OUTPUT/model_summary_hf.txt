@@ -1,0 +1,292 @@
+
+--- Analysis Run: 2026-04-04 20:52:37 ---
+ Hugging Face Loaded 
+Model Summary for dinov3_vits16plus
+------------------------------
+==================================================================================================================================
+Layer (type:depth-idx)                             Input Shape          Output Shape         Param #              Mult-Adds
+==================================================================================================================================
+DINOv3ViTModel                                     [2, 3, 448, 448]     [2, 384]             --                   --
+├─DINOv3ViTEmbeddings: 1-1                         [2, 3, 448, 448]     [2, 789, 384]        2,304                --
+│    └─Conv2d: 2-1                                 [2, 3, 448, 448]     [2, 384, 28, 28]     295,296              463,024,128
+├─DINOv3ViTRopePositionEmbedding: 1-2              [2, 3, 448, 448]     [784, 64]            --                   --
+├─DINOv3ViTEncoder: 1-3                            [2, 789, 384]        [2, 789, 384]        --                   --
+│    └─ModuleList: 2-2                             --                   --                   --                   --
+│    │    └─DINOv3ViTLayer: 3-1                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-2                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-3                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-4                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-5                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-6                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-7                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-8                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-9                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-10                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-11                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-12                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+├─LayerNorm: 1-4                                   [2, 789, 384]        [2, 789, 384]        768                  1,536
+==================================================================================================================================
+Total params: 28,692,864
+Trainable params: 28,692,864
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 519.80
+==================================================================================================================================
+Input size (MB): 4.82
+Forward/backward pass size (MB): 998.58
+Params size (MB): 114.76
+Estimated Total Size (MB): 1118.16
+==================================================================================================================================
+------------------------------
+==== Model BluePrint ====
+DINOv3ViTModel(
+  (embeddings): DINOv3ViTEmbeddings(
+    (patch_embeddings): Conv2d(3, 384, kernel_size=(16, 16), stride=(16, 16))
+  )
+  (rope_embeddings): DINOv3ViTRopePositionEmbedding()
+  (model): DINOv3ViTEncoder(
+    (layer): ModuleList(
+      (0-11): 12 x DINOv3ViTLayer(
+        (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (attention): DINOv3ViTAttention(
+          (k_proj): Linear(in_features=384, out_features=384, bias=False)
+          (v_proj): Linear(in_features=384, out_features=384, bias=True)
+          (q_proj): Linear(in_features=384, out_features=384, bias=True)
+          (o_proj): Linear(in_features=384, out_features=384, bias=True)
+        )
+        (layer_scale1): DINOv3ViTLayerScale()
+        (drop_path): Identity()
+        (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (mlp): DINOv3ViTGatedMLP(
+          (gate_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (up_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (down_proj): Linear(in_features=1536, out_features=384, bias=True)
+          (act_fn): SiLUActivation()
+        )
+        (layer_scale2): DINOv3ViTLayerScale()
+      )
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+)
+------------------------------
+------------------------------
+ImageNet mean: (0.485, 0.456, 0.406)ImageNet std: (0.229, 0.224, 0.225)------------------------------
+
+--- Analysis Run: 2026-04-04 21:29:19 ---
+ Hugging Face Loaded 
+Model Summary for dinov3_vits16plus
+------------------------------
+==================================================================================================================================
+Layer (type:depth-idx)                             Input Shape          Output Shape         Param #              Mult-Adds
+==================================================================================================================================
+DINOv3ViTModel                                     [2, 3, 448, 448]     [2, 384]             --                   --
+├─DINOv3ViTEmbeddings: 1-1                         [2, 3, 448, 448]     [2, 789, 384]        2,304                --
+│    └─Conv2d: 2-1                                 [2, 3, 448, 448]     [2, 384, 28, 28]     295,296              463,024,128
+├─DINOv3ViTRopePositionEmbedding: 1-2              [2, 3, 448, 448]     [784, 64]            --                   --
+├─DINOv3ViTEncoder: 1-3                            [2, 789, 384]        [2, 789, 384]        --                   --
+│    └─ModuleList: 2-2                             --                   --                   --                   --
+│    │    └─DINOv3ViTLayer: 3-1                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-2                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-3                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-4                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-5                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-6                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-7                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-8                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-9                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-10                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-11                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-12                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+├─LayerNorm: 1-4                                   [2, 789, 384]        [2, 789, 384]        768                  1,536
+==================================================================================================================================
+Total params: 28,692,864
+Trainable params: 28,692,864
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 519.80
+==================================================================================================================================
+Input size (MB): 4.82
+Forward/backward pass size (MB): 998.58
+Params size (MB): 114.76
+Estimated Total Size (MB): 1118.16
+==================================================================================================================================
+------------------------------
+==== Model BluePrint ====
+DINOv3ViTModel(
+  (embeddings): DINOv3ViTEmbeddings(
+    (patch_embeddings): Conv2d(3, 384, kernel_size=(16, 16), stride=(16, 16))
+  )
+  (rope_embeddings): DINOv3ViTRopePositionEmbedding()
+  (model): DINOv3ViTEncoder(
+    (layer): ModuleList(
+      (0-11): 12 x DINOv3ViTLayer(
+        (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (attention): DINOv3ViTAttention(
+          (k_proj): Linear(in_features=384, out_features=384, bias=False)
+          (v_proj): Linear(in_features=384, out_features=384, bias=True)
+          (q_proj): Linear(in_features=384, out_features=384, bias=True)
+          (o_proj): Linear(in_features=384, out_features=384, bias=True)
+        )
+        (layer_scale1): DINOv3ViTLayerScale()
+        (drop_path): Identity()
+        (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (mlp): DINOv3ViTGatedMLP(
+          (gate_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (up_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (down_proj): Linear(in_features=1536, out_features=384, bias=True)
+          (act_fn): SiLUActivation()
+        )
+        (layer_scale2): DINOv3ViTLayerScale()
+      )
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+)
+------------------------------
+------------------------------
+ImageNet mean: (0.485, 0.456, 0.406)ImageNet std: (0.229, 0.224, 0.225)------------------------------
+
+--- Analysis Run: 2026-04-04 21:30:32 ---
+ Hugging Face Loaded 
+Model Summary for dinov3_vits16plus
+------------------------------
+==================================================================================================================================
+Layer (type:depth-idx)                             Input Shape          Output Shape         Param #              Mult-Adds
+==================================================================================================================================
+DINOv3ViTModel                                     [2, 3, 448, 448]     [2, 384]             --                   --
+├─DINOv3ViTEmbeddings: 1-1                         [2, 3, 448, 448]     [2, 789, 384]        2,304                --
+│    └─Conv2d: 2-1                                 [2, 3, 448, 448]     [2, 384, 28, 28]     295,296              463,024,128
+├─DINOv3ViTRopePositionEmbedding: 1-2              [2, 3, 448, 448]     [784, 64]            --                   --
+├─DINOv3ViTEncoder: 1-3                            [2, 789, 384]        [2, 789, 384]        --                   --
+│    └─ModuleList: 2-2                             --                   --                   --                   --
+│    │    └─DINOv3ViTLayer: 3-1                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-2                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-3                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-4                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-5                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-6                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-7                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-8                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-9                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-10                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-11                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-12                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+├─LayerNorm: 1-4                                   [2, 789, 384]        [2, 789, 384]        768                  1,536
+==================================================================================================================================
+Total params: 28,692,864
+Trainable params: 28,692,864
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 519.80
+==================================================================================================================================
+Input size (MB): 4.82
+Forward/backward pass size (MB): 998.58
+Params size (MB): 114.76
+Estimated Total Size (MB): 1118.16
+==================================================================================================================================
+------------------------------
+==== Model BluePrint ====
+DINOv3ViTModel(
+  (embeddings): DINOv3ViTEmbeddings(
+    (patch_embeddings): Conv2d(3, 384, kernel_size=(16, 16), stride=(16, 16))
+  )
+  (rope_embeddings): DINOv3ViTRopePositionEmbedding()
+  (model): DINOv3ViTEncoder(
+    (layer): ModuleList(
+      (0-11): 12 x DINOv3ViTLayer(
+        (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (attention): DINOv3ViTAttention(
+          (k_proj): Linear(in_features=384, out_features=384, bias=False)
+          (v_proj): Linear(in_features=384, out_features=384, bias=True)
+          (q_proj): Linear(in_features=384, out_features=384, bias=True)
+          (o_proj): Linear(in_features=384, out_features=384, bias=True)
+        )
+        (layer_scale1): DINOv3ViTLayerScale()
+        (drop_path): Identity()
+        (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (mlp): DINOv3ViTGatedMLP(
+          (gate_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (up_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (down_proj): Linear(in_features=1536, out_features=384, bias=True)
+          (act_fn): SiLUActivation()
+        )
+        (layer_scale2): DINOv3ViTLayerScale()
+      )
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+)
+------------------------------
+------------------------------
+ImageNet mean: (0.485, 0.456, 0.406)ImageNet std: (0.229, 0.224, 0.225)------------------------------
+
+--- Analysis Run: 2026-04-04 21:33:28 ---
+ Hugging Face Loaded 
+Model Summary for dinov3_vits16plus
+------------------------------
+==================================================================================================================================
+Layer (type:depth-idx)                             Input Shape          Output Shape         Param #              Mult-Adds
+==================================================================================================================================
+DINOv3ViTModel                                     [2, 3, 448, 448]     [2, 384]             --                   --
+├─DINOv3ViTEmbeddings: 1-1                         [2, 3, 448, 448]     [2, 789, 384]        2,304                --
+│    └─Conv2d: 2-1                                 [2, 3, 448, 448]     [2, 384, 28, 28]     295,296              463,024,128
+├─DINOv3ViTRopePositionEmbedding: 1-2              [2, 3, 448, 448]     [784, 64]            --                   --
+├─DINOv3ViTEncoder: 1-3                            [2, 789, 384]        [2, 789, 384]        --                   --
+│    └─ModuleList: 2-2                             --                   --                   --                   --
+│    │    └─DINOv3ViTLayer: 3-1                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-2                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-3                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-4                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-5                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-6                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-7                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-8                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-9                    [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-10                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-11                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+│    │    └─DINOv3ViTLayer: 3-12                   [2, 789, 384]        [2, 789, 384]        2,366,208            4,730,880
+├─LayerNorm: 1-4                                   [2, 789, 384]        [2, 789, 384]        768                  1,536
+==================================================================================================================================
+Total params: 28,692,864
+Trainable params: 28,692,864
+Non-trainable params: 0
+Total mult-adds (Units.MEGABYTES): 519.80
+==================================================================================================================================
+Input size (MB): 4.82
+Forward/backward pass size (MB): 998.58
+Params size (MB): 114.76
+Estimated Total Size (MB): 1118.16
+==================================================================================================================================
+------------------------------
+==== Model BluePrint ====
+DINOv3ViTModel(
+  (embeddings): DINOv3ViTEmbeddings(
+    (patch_embeddings): Conv2d(3, 384, kernel_size=(16, 16), stride=(16, 16))
+  )
+  (rope_embeddings): DINOv3ViTRopePositionEmbedding()
+  (model): DINOv3ViTEncoder(
+    (layer): ModuleList(
+      (0-11): 12 x DINOv3ViTLayer(
+        (norm1): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (attention): DINOv3ViTAttention(
+          (k_proj): Linear(in_features=384, out_features=384, bias=False)
+          (v_proj): Linear(in_features=384, out_features=384, bias=True)
+          (q_proj): Linear(in_features=384, out_features=384, bias=True)
+          (o_proj): Linear(in_features=384, out_features=384, bias=True)
+        )
+        (layer_scale1): DINOv3ViTLayerScale()
+        (drop_path): Identity()
+        (norm2): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+        (mlp): DINOv3ViTGatedMLP(
+          (gate_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (up_proj): Linear(in_features=384, out_features=1536, bias=True)
+          (down_proj): Linear(in_features=1536, out_features=384, bias=True)
+          (act_fn): SiLUActivation()
+        )
+        (layer_scale2): DINOv3ViTLayerScale()
+      )
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-05, elementwise_affine=True)
+)
+------------------------------
+------------------------------
+ImageNet mean: (0.485, 0.456, 0.406)ImageNet std: (0.229, 0.224, 0.225)------------------------------
