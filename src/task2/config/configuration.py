@@ -4,7 +4,8 @@ from src.task2.utils.common import read_yaml, create_directories
 
 from src.task2.entity.config import (DataIngestionConfig,
                                      ModelBuildConfig,
-                                     VizConfig
+                                     VizConfig,
+                                     CrossVizConfig
                                      )
 
 class ConfigurationManager:
@@ -81,7 +82,16 @@ class ConfigurationManager:
             th=float(self.params.threshold),
             query_box=bool(self.params.query_box),
         )
-        
-        
-
         return viz_config
+    
+    def get_cross_viz_config(self) -> CrossVizConfig:
+        config = self.config.viz
+        create_directories([config.root_dir])
+        cross_viz_config = CrossVizConfig(
+            root_dir=Path(config.root_dir),
+            dense_embd=Path(config.Dense_embedding),
+            local_data=Path(config.local_data_file),
+            outwithin= Path(config.OUTPUT_within),
+            out=Path(config.OUTPUT)
+        )
+        return cross_viz_config

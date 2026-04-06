@@ -12,3 +12,4 @@
 {"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
 {"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
 {"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
+{"Dataset Name": "artifacts/data_ingestion/ls0.npy", "precision@k": 0.6, "recall@k": 0.0857, "f1@k": 0.15, "k": 400, "total_pos": 2800}

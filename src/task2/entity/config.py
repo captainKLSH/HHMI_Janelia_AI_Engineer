@@ -45,3 +45,11 @@ class VizConfig:
     k:int
     th: float
     query_box: bool
+
+@dataclass(frozen=True)
+class CrossVizConfig:
+    root_dir: Path
+    dense_embd: Path
+    local_data: Path
+    outwithin:Path
+    out:Path
