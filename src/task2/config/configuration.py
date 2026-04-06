@@ -3,7 +3,8 @@ from src.task2.constants import *
 from src.task2.utils.common import read_yaml, create_directories
 
 from src.task2.entity.config import (DataIngestionConfig,
-                                     ModelBuildConfig
+                                     ModelBuildConfig,
+                                     VizConfig
                                      )
 
 class ConfigurationManager:
@@ -62,3 +63,25 @@ class ConfigurationManager:
         )
 
         return model_build_config
+    def get_viz_config(self) -> VizConfig:
+        config = self.config.viz
+
+        create_directories([config.root_dir])
+
+        viz_config = VizConfig(
+            root_dir=Path(config.root_dir),
+            dense_embd=Path(config.Dense_embedding),
+            local_data=Path(config.local_data_file),
+            outwithin= Path(config.OUTPUT_within),
+            out=Path(config.OUTPUT),
+            z_cord=int(self.params.z_cord),
+            y_cord=tuple(self.params.y_cord),
+            x_cord=tuple(self.params.x_cord),
+            k=int(self.params.k),
+            th=float(self.params.threshold),
+            query_box=bool(self.params.query_box),
+        )
+        
+        
+
+        return viz_config

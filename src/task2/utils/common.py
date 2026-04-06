@@ -62,8 +62,8 @@ def save_json(path: Path, data: dict):
         path (Path): path to json file
         data (dict): data to be saved in json file
     """
-    with open(path, "w") as f:
-        json.dump(data, f, indent=4)
+    with open(path, "a") as f:
+        f.write(json.dumps(data) + "\n")
 
     logger.info(f"json file saved at: {path}")
 

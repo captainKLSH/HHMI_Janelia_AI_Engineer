@@ -25,4 +25,10 @@ model_build:
 
 viz:
     root_dir: artifacts/retri_viz
+    Dense_embedding: artifacts/models/
+    local_data_file: artifacts/data_ingestion/
+    OUTPUT: OUTPUT/
+    OUTPUT_within: OUTPUT/withinRet.json
+
+
 

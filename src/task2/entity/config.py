@@ -32,3 +32,16 @@ class ModelBuildConfig:
     slide_use:int
     den_sav:Path
 
+@dataclass(frozen=True)
+class VizConfig:
+    root_dir: Path
+    dense_embd: Path
+    local_data: Path
+    outwithin:Path
+    out:Path
+    z_cord:int
+    y_cord: tuple
+    x_cord: tuple
+    k:int
+    th: float
+    query_box: bool

@@ -1,0 +1,14 @@
+{
+    "Dataset Name": "artifacts/data_ingestion/hs0.npy",
+    "precision@k": 0.9925,
+    "recall@k": 0.1588,
+    "f1@k": 0.2738,
+    "k": 400,
+    "total_pos": 2500
+}
+{"Dataset Name": "artifacts/data_ingestion/hs1.npy", "precision@k": 0.8625, "recall@k": 0.138, "f1@k": 0.2379, "k": 400, "total_pos": 2500}
+{"Dataset Name": "artifacts/data_ingestion/hs1.npy", "precision@k": 0.9625, "recall@k": 0.2567, "f1@k": 0.4053, "k": 400, "total_pos": 1500}
+{"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 0.9575, "recall@k": 0.2553, "f1@k": 0.4032, "k": 400, "total_pos": 1500}
+{"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
+{"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
+{"Dataset Name": "artifacts/data_ingestion/ps1.npy", "precision@k": 1.0, "recall@k": 0.1429, "f1@k": 0.25, "k": 400, "total_pos": 2800}
