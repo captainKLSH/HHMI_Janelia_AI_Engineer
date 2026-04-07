@@ -1,4 +1,4 @@
-# DINOchondria
+# DINO-chondria 🦖🔬
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -74,9 +74,20 @@ pipx install uv #(If you don't already have uv installed )
 uv init
 uv sync #(Recommended for easy and fast synchronize to project's virtual environment)
 
+
 #Traditional aproach
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
+### Key Dependencies
+- `torch>=2.0.0` (alternative for other platforms)
+- `mlflow` (experiment tracking)
+- `dvc>=3.42.0` (data versioning)
+- `numpy`, `pandas`, `tqdm`, `pyyaml`, `python-box`
+- `fibsem-tools>=7.0.5` (Extraction tool)
+
 ### 🏛️ Model Architecture
 
 - **Base Model**: DINOv3 ViT-S/16 distilled	21M parameter	trained on:LVD-1689M
@@ -86,7 +97,7 @@ pip install -r requirements.txt
 - **Inference Strategy**: 3D sliding window with overlap (seamlessly processes massive biological volumes without overwhelming GPU memory)
 
 ## 📝 3. Project Repository Structure
-```
+```text
 📦HHMI_Janelia_AI_Engineer
  ┣ 📂OUTPUT                # Final generated results, visualizations, and summary reports
  ┃ ┣ 📂crossretrive        # Images/data from the cross-dataset matching
@@ -162,3 +173,118 @@ pip install -r requirements.txt
 ## 💻 How to Use It
 
 Here is a simple example of how to use the code to outline mitochondria and search for similar ones.
+### Option A: Run Complete Pipeline
+Execute all stages sequentially:
+```bash
+source .venv/bin/activate
+uv run main.py -all
+```
+or
+```bash
+python main.py -all
+```
+This will execute:
+
+1. **Stage 1**: Data Ingestion (downloads and extracts dataset)
+2. **Stage 2**: Prepare Base Model and embeddings (loads DINOV3)
+3. **Stage 3**: Within-dataset Retrival & Visualization
+4. **Stage 4**: Cross-dataset Retrival & Visualization
+5. **Stage 5**: Multiquery-dataset Retrival & Visualization
+### Option B: Run Individual Stage
+#### Stage 1: Data Ingestion
+```bash
+python main.py -stage1
+```
+#### Stage 2: Prepare Base Model and embeddings 
+```bash
+python main.py -stage2
+```
+<div align="center">
+<h3>🔍 PCA Examples Across Cell Types</h3>
+
+|||
+|:-----:|:-:|
+|<img src="./OUTPUT/pca/ls1.png" width="600px">|<img src="./OUTPUT/pca/pca_hela.png" width="600px">|
+|*Example of PCA visualization for Mouse Liver chunk embedding extracted.*|*Example of PCA visualization for HeLa cell with RUSH cargo chunk embedding extracted.*|
+
+</div>
+
+#### Stage 3: Within-dataset Retrival
+```bash
+python main.py -stage3
+```
+
+<div align="center">
+<h3>🔍 Within dataset Retrieval Examples Across Cell Types</h3>
+
+|||
+|:-----:|:-:|
+|<img src="./OUTPUT/retrival/ls0.png" width="600px">|<img src="./OUTPUT/retrival/ps1.png" width="600px">|
+|*Example of visualization for Mouse Liver mitochondria chunk.*|*Example of visualization for Pancreas  mitochondria chunk.*|
+
+</div>
+
+#### Stage 4: Cross-dataset Retrival
+```bash
+python main.py -stage4
+```
+
+<div align="center">
+<h3>🔍 Cross dataset Retrieval Examples Across Cell Types</h3>
+
+|||
+|:-----:|:-:|
+|<img src="./OUTPUT/crossretrive/pca_ps0hs0.png" width="600px">|<img src="./OUTPUT/crossretrive/cross_lps1.png" width="600px">|
+|*Example of PCA visualization for Hela  mitochondria vs Pancreas  mitochondria.*|*Example of visualization for Liver  mitochondria vs Pancreas  mitochondria.*|
+
+</div>
+
+#### Stage 5: Multiquery-dataset Retrival
+```bash
+python main.py -stage5
+```
+
+<div align="center">
+<h3>🔍 Multiquery dataset Retrieval Examples Across Cell Types</h3>
+
+|||
+|:-----:|:-:|
+|<img src="./OUTPUT/multiquery_viz/mq_ls0hs0.png" width="600px">|<img src="./OUTPUT/multiquery_viz/mq_pca_ls0hs0.png" width="600px">|
+|*Example of visualization for Liver  mitochondria vs hela  mitochondria.*|*Example of PCA visualization for Liver  mitochondria vs Hela  mitochondria.*|
+
+</div>
+
+### Model Artifacts
+
+Trained models are saved in:
+
+- **Base Model**: `artifacts/models/dinov3_vits16plus_pretrain_lvd1689m-4057cbaa.pth`
+- **Hugging face Model**: `facebook/dinov3-vits16plus-pretrain-lvd1689m`
+- **Checkpoints**: `artifacts/models/hs0.pt`
+
+## Troubleshooting
+### Issue: Data download fails
+**Solution**: 
+* Check dataset link in `config/config.yaml` is accessible and file ID is correct.
+* Check `params.yaml` for seclecting section
+
+### Issue: Out of Memory or Model Building error
+**Solution**:
+* Try changing input volume `(Slice_use: 6)` and input dimension`INPUT_SIZE` in `params.yaml`
+* Reduce `Slice_BATCH_size` in `params.yaml`
+* Check Model Emdedding dimensions in `params.yaml`
+
+### Issue: Model accuracy too low
+**Solution**:
+* Enable/verify `query_box: True` and try changing query window in `params.yaml`
+* Try changing `threshold: 0.7` in `params.yaml`
+* Increase `k` in `params.yaml` to get more pixels for model to look at.
+* Select/change proper annotations corresponding to their respective datasets.
+
+## 🤝 Contributing
+
+We welcome contributions! If you have ideas for making the segmentation more accurate or the search faster, please open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

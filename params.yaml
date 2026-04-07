@@ -12,6 +12,7 @@ N_REGISTERS: 5
 EMBED_DIM: 384
 Slice_BATCH_size: 1
 Slice_use: 6
+
 #within retrival
 z_cord: 3
 y_cord: [60, 130]
