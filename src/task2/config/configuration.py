@@ -5,7 +5,8 @@ from src.task2.utils.common import read_yaml, create_directories
 from src.task2.entity.config import (DataIngestionConfig,
                                      ModelBuildConfig,
                                      VizConfig,
-                                     CrossVizConfig
+                                     CrossVizConfig,
+                                     MultiQueryConfig
                                      )
 
 class ConfigurationManager:
@@ -95,3 +96,20 @@ class ConfigurationManager:
             out=Path(config.OUTPUT)
         )
         return cross_viz_config
+    
+    def get_mq_config(self) -> MultiQueryConfig:
+        config = self.config.mqr
+
+        create_directories([config.root_dir])
+
+        mq_config = MultiQueryConfig(
+            root_dir=Path(config.root_dir),
+            dense_embd=Path(config.Dense_embedding),
+            local_data=Path(config.local_data_file),
+            out=Path(config.OUTPUT),
+            anot=Path(config.annot),
+            k=int(self.params.mul_k),
+            
+        )
+
+        return mq_config

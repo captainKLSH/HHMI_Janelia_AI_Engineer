@@ -53,3 +53,12 @@ class CrossVizConfig:
     local_data: Path
     outwithin:Path
     out:Path
+
+@dataclass(frozen=True)
+class MultiQueryConfig:
+    root_dir: Path
+    dense_embd: Path
+    local_data: Path
+    out:Path
+    anot:Path
+    k: int

@@ -1,8 +1,9 @@
 #data ingestion
 scale: s0
-z_idx: [4600,5048]
+z_idx: [4600,5048] 
 y_idx: [6000,6448]
 x_idx: [6000,6448]
+
 #model building
 input_size_test: [1, 3, 448, 448]
 patch_size: 16
@@ -11,10 +12,13 @@ N_REGISTERS: 5
 EMBED_DIM: 384
 Slice_BATCH_size: 1
 Slice_use: 6
-
+#within retrival
 z_cord: 3
-y_cord: [50, 120]
-x_cord: [250, 290]
+y_cord: [60, 130]
+x_cord: [300, 350]
 k: 400
 threshold: 0.7
 query_box: True
+
+#multi query
+mul_k: 20000

@@ -2,9 +2,10 @@ artifacts_root: artifacts
 
 data_ingestion:
     root_dir: artifacts/data_ingestion
-    source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
+    # source_url: s3://janelia-cosem-datasets/jrc_mus-liver/jrc_mus-liver.n5/em/fibsem-uint8/
     # source_url: s3://janelia-cosem-datasets/jrc_jurkat-1/jrc_jurkat-1.n5/em/fibsem-uint16/
     # source_url: s3://janelia-cosem-datasets/jrc_hela-21/jrc_hela-21.n5/em/fibsem-uint8/
+    source_url: s3://janelia-cosem-datasets/jrc_ctl-id8-1/jrc_ctl-id8-1.n5/em/fibsem-uint16/
     local_data_file: artifacts/data_ingestion/
     # local_data_file: artifacts/data_ingestion/T_cell_chunk_s0.npy
     # local_data_file: artifacts/data_ingestion/hela_cell_chunk_s1.npy
@@ -30,5 +31,11 @@ viz:
     OUTPUT: OUTPUT/
     OUTPUT_within: OUTPUT/withinRet.json
 
+mqr:
+    root_dir: artifacts/retri_viz
+    Dense_embedding: artifacts/models/
+    local_data_file: artifacts/data_ingestion/
+    OUTPUT: OUTPUT/
+    annot: annotations.json
 
 
