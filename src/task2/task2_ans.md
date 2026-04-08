@@ -54,11 +54,11 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 - Our 448 2D  slice generates ($\frac{448}{16} = 28$) 28 x 28 patches, Flattening it we get 784 spatial vector with 1 [CLS] token and 4 register token.
 - **Tokenization**: we have 789 sequence tokens each with 384D embedding keeping pixel co-ordinates in memory injected via RoPE(**Ro**tary **P**ositional **E**mbeddings )
 - These passes through 12 dense tranformer layer, updating each 384D embedding with description and context awareness.
-- At the end, we keep the 784 pixels and discard 5 special tokens, 784 pixels is interpolated(upsampled) back to original image size ($784$ --> $28*28$ --> $448*448$)
+- At the end, we keep the 784 pixels and discard 5 special tokens, 784 pixels is interpolated(upsampled) back to original image size ($784$ --> $28 \times 28$ --> $448 \times 448$)
 - ***We have a high-resolution map where every single pixel has its own brilliant 384-number biological fingerprint!***
 
 - **Other methods for extraction:**
-    - **Multi-Layer Feature Concatenation (Similar method proposed in [DinoV3 paper](https://arxiv.org/pdf/2508.10104)):** 
+    - **Multi-Layer Feature Concatenation (Similar method proposed in [DinoV3 paper](https://arxiv.org/abs/2508.10104)):** 
         - Instead of just the last layer, you take the outputs from the last 4 layers and stack them together.
         - We extract layers 9, 10, 11, and 12. we can either average them or concatenate them into a much larger vector (e.g., $384 \times 4 = 1536$ dims).
         - Early layers capture edges and textures (the cristae lines, cell wall), while later layers capture object identity (the whole mitochondrion).
@@ -114,7 +114,7 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 - ***NOTE: Please find the [visualization output images in here](../../OUTPUT/crossretrive/)***
 
 <div align="center">
-<h3>🔍 Visual Proof of Cross-Dataset Semantic Retrieval and Cross-Dataset Semantic Retrieval</h3>
+<h3>🔍 Visual Proof of Overcoming Domain Shift in Feature Space and Cross-Dataset Semantic Retrieval</h3>
 
 |||
 |:-----:|:-:|
@@ -138,11 +138,12 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
     - *Score Fusion (Late Fusion):* We execute $N$ independent searches, generating $N$ distinct cosine similarity heatmaps. We then calculate the pixel-wise average across all heatmaps.
     - *Reciprocal Rank Fusion (RRF):* This is inspired from RAG systems. We generate $N$ independent ranked lists of pixels. A final fused score is assigned using the formula:( $RRF = \sum \frac{1}{rank + k}$. )RRF heavily penalizes false positives, ensuring that only pixels consistently highly ranked across multiple different queries are retrieved
     - these three methods are evaluated natively using `Precision@k`, `Recall@k`, and `F1@k` against the ground-truth annotations of the target dataset.
+    - All three fusion methods demonstrated highly stable and comparable performance, validating the robustness of the preceding Z-Score domain alignment step. Mean Aggregation (Early Fusion) emerged as the optimal strategy.
     - we generate a same panel dashboard from above to visualize query retrival
 - - ***NOTE: Please find the [visualization output images in here](../../OUTPUT/multiquery_viz/)***
 
 <div align="center">
-<h3>🔍 Visual Proof of Cross-Dataset Semantic Retrieval and Cross-Dataset Semantic Retrieval</h3>
+<h3>🔍 Visual Proof of Fusion Strategies & Multi-Query Dashboard</h3>
 
 |||
 |:-----:|:-:|
@@ -158,3 +159,30 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 </div>
 
 ## Task 4 — Proposal: Improving Mitochondria Detection with Minimal Fine-Tuning
+
+- Our main objective is to adapt a pre-trained DINOv3 Vision Transformer (ViT) to the specific domain of mitochondria segmentation, minimizing computational overhead and preventing forgetting of the model's generalized feature space.
+
+- Our previous task prove that the off the shelf DINOv3 model understands the fundamental biological semantics, Zero-shot learning can be implemented. But to completely make model completely understand biological semantics (electron microscopy noise, varying staining, specific organelle morphology) we need to use parameter efficient fine-tuning (PEFT) technique.
+- DINOv3 is trained on 1.689 billion images, extracted from a pool of 17 billion public Instagram posts which are natural imagesets. However Microscopy Image images have a distinct texture and noise profile compared to the natural images.
+    - **Stratergy 1:**
+    - We will use [LowRank Adaptation (LoRA)](https://arxiv.org/abs/2106.09685) proven method on the last N transformer blocks, to freeze the pre trained model weights and inject trainable rank decomposition matrices into the Transformer architecture. Only the low-rank residuals are trained.
+    - we target the Query (Q) and Value (V) projection matrices within the Multi-Head Attention blocks.
+    - LoRA allows the attention mechanism to subtly shift its focus to EM-specific textures (like cristae gradients, mitochondrial wall thinkness) using less than 1% of the original parameter count.
+    - Only the late blocks encode high level semantic context, which is where the natural image context is strongest and most harmful.Adapting only the last 2–4 blocks with rank `r = 8` adds roughly:
+        - params = $2 \times r \times (din + dout) \times Nadaptedblocks \times 4projections$
+        = $2 \times 8 \times (384 + 384) \times 3 \times 4$ ~ 147,000 params   (for vits16plus, 3 blocks)
+    - That is 0.5% of the backbone's 28.7M parameters.
+    - **Stratergy 2:**
+    - we use adapter layers between encoder and decoder called **Linear Probing** (Classifier-Level Adaptation), The adapter learns a domain-specific projection that remaps the natural-image feature distribution into the Microscopy tissue image feature distribution before the decoder.
+    - This is faster to converge than LoRA because there are fewer parameters and the gradient path is shorter.
+    - **Stratergy 3:**
+    - we run a short self-supervised fine tuning pass of the DINOv3, on your unlabelled microscopy volumes. This shifts the embedding distribution toward microscopy tissue before any segmentation training begins. Use the resulting weights as the initialisation.
+    - During backpropagation, only these specific prompt tokens are updated.
+
+- ViTs process at a single scale, but biological structures vary vastly in size. We will extract feature maps from intermediate layers (e.g., layers 3, 6, 9, and 12) to capture both high resolution edges (early layers) and deep semantic context (late layers).
+- We will append a lightweight simplified U-Net style decoder. This head will consist of a few standard transposed convolutions and upsampling layers to fuse the multi-scale features and project the 384-dimensional embeddings down to a 2D binary mask
+- The backbone remains 99% frozen, meaning the only fully initialized weights belong to this small decoder, making training incredibly fast.
+- `Few-shot Learning:` Because we are using PEFT and a small decoder, we can achieve high performance and reducing the need for massive annotated datasets.
+- Train using the AdamW optimizer with a cosine decay learning rate schedule. Only the LoRA weights and the decoder head are passed to the optimizer.
+- Use *Binary Cross-Entropy (BCE)* to penalize high-confidence false positives and *Dice Loss* to handle the severe class imbalance(mitochondria only make upto a small percentage of total cell volume)
+- Calculate Intersection over Union (IoU) and Pixel-wise F1-Score against ground-truth masks.
