@@ -28,7 +28,7 @@ Choosing chunk is essential cause initial chunks such as s0,s1 has higher resolu
 * **Logging:** It records the metadata and details of the download into a text file so we have a permanent record of what was extracted.
 
 **3. Inspecting the Delivery (`data_dim`)**
-Once the file is safely on the computer, the script runs a quick inspection. It peeks at the file without fully loading the massive image into the computer's active memory. It calculates and logs:
+Once the file is safely on the computer, the script runs a quick inspection. It peeks at the file without fully loading the massive image into the computer's active memory. It calculates and [logs](../../OUTPUT/inputdata_summary.txt) :
 * **Shape:** The physical dimensions of the 3D block.
 * **Total Elements:** The exact number of data points (voxels) making up the image.
 * **Memory Size:** How many Megabytes the chunk occupies.
@@ -37,26 +37,124 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 
 ### 1. *Patch size selection*: Which patch size is best suited to capture mitochondrial ultrastructure in the embeddings? Justify your choice.
 
-- ***16x16*** (dictated by the specific DINOv3 ViT-Small plus) we can see this in [model summary](../../OUTPUT/model_summary.txt) generated as kernel_size during model build.
-- When analyzing Electron Microscopy (EM) datasets, mitochondrial ultrastructures such as cristae folds, the mitochondrial matrix, and the double-membrane boundary—are exceptionally fine, often spanning just a few pixels at standard nanometer-per-voxel resolutions like (8, 8, 8) voxel size (nm) for Mouse Liver set.
-- Manually we cannot change the patch dimension of a pre-trained model.
-- But we can work around by choosing input image pefectly matching patch size. E.g: patch size here is 16, so find a image resolution which is perfectly divisible by 16 without reminders.
-- To increase patch size we down sample image before sending through model, for smaller patch size we up sample the image.
-- Other options is to add padding to increase image size artificially using this principle $\frac{(Input size+(2*padding)-patch size)}{stride}+1$
-- We can use overlapping patches by changing stride using $\frac{inputsize-patchsize}{stride}+1$
+- ***16x16*** (dictated by the specific DINOv3 ViT-Small plus) This is confirmed by the `kernel_size` in the [model summary](../../OUTPUT/model_summary.txt) generated during the model build.
+- When analyzing Electron Microscopy (EM) datasets, mitochondrial ultrastructures such as cristae folds, the mitochondrial matrix, and the double-membrane boundary—are exceptionally fine, often spanning just a few pixels at standard nanometer-per-voxel resolutions like (8, 8, 8) voxel size (nm) for Mouse Liver set. A smaller patch size is strictly necessary to prevent these micro-structures from being averaged out into the surrounding background noise.
+- While we cannot manually change the patch dimension of a pre-trained model's weights, we can control the resolution and stride:
+- we can work around by choosing input image resolution pefectly matching patch size. E.g: patch size here is 16, so find a image resolution which is perfectly divisible by 16 without remainders.
+- To increase patch size (`for speed`) we down sample image before sending it through model, for smaller patch size for (`higher acuity`) we upsample the image.
+- Other options is to add padding to increase image size artificially using this principle formula $\frac{(Input size+(2*padding)-patch size)}{stride}+1$
+- We can use overlapping patches by changing stride using $\frac{inputsize-patchsize}{stride}+1$. We can generate denser, overlapping patches by reducing the stride, effectively increasing resolution without altering the pre-trained 16x16 weights.
 
 ### 2. *Dense embeddings:* Propose a method for obtaining dense, per-pixel (or per-voxel) embeddings rather than per-patch embeddings. Implement your proposed method and compute dense embeddings for both datasets.
 
-- ***Proposed Method: Token Reshaping and Bilinear Interpolation***
+- ***Proposed Method: Token Reshaping and Bilinear Interpolation*** 
 - Vision Transformers like DINOv3 process inputs as discrete patches, inherently outputting a flat 1D sequence of embeddings rather than a dense image map. To achieve dense, per-pixel (or per-voxel) embeddings required for precise semantic retrieval, we must map these patch level features back to the original image coordinate space.
 - The proposed method involves intercepting the model's final hidden state, filtering non-spatial data, and mathematically upsampling the remaining tokens.
-- We use our model inputs during experimentation input size is *(448,448,448)*, patch size is *16* and model has *384* embeddings these can be interpreted while building model and summary is generated along with it. You can use different input size from [input_size_test](../../params.yaml) from `params.yaml` to see data flow and parameters.
-- Our 448 pixel size generates ($\frac{448}{16} = 28$) 28 x 28 patches, Flating it we get 784 vector with 1 [CLS] token and 4 register token.
-- **Tokenization**: we have 789 sequence each with 384 embedding keeping pixel co-ordinates in memory with RoPE(**Ro**tary **P**ositional **E**mbeddings )
-- These passes through 12 dense tranformer layer, updating 384 embedding with description and context awareness.
-- At the end, we keep the 784 pixels + 5 Tokens, 784 pixels is interpolated back to original image size ($784$ --> $28*28$ --> $448*448$)
+- In our experimentation, input size is *(448,448,448)*, patch size is *16* and model has *384* embeddings these can be interpreted while building model and summary is generated along with it. You can adjust the input size in [params.yaml](../../params.yaml) under `input_size_test` to observe how the data flow and parameters adapt.
+- Our 448 2D  slice generates ($\frac{448}{16} = 28$) 28 x 28 patches, Flattening it we get 784 spatial vector with 1 [CLS] token and 4 register token.
+- **Tokenization**: we have 789 sequence tokens each with 384D embedding keeping pixel co-ordinates in memory injected via RoPE(**Ro**tary **P**ositional **E**mbeddings )
+- These passes through 12 dense tranformer layer, updating each 384D embedding with description and context awareness.
+- At the end, we keep the 784 pixels and discard 5 special tokens, 784 pixels is interpolated(upsampled) back to original image size ($784$ --> $28*28$ --> $448*448$)
 - ***We have a high-resolution map where every single pixel has its own brilliant 384-number biological fingerprint!***
+
+- **Other methods for extraction:**
+    - **Multi-Layer Feature Concatenation (Similar method proposed in [DinoV3 paper](https://arxiv.org/pdf/2508.10104)):** 
+        - Instead of just the last layer, you take the outputs from the last 4 layers and stack them together.
+        - We extract layers 9, 10, 11, and 12. we can either average them or concatenate them into a much larger vector (e.g., $384 \times 4 = 1536$ dims).
+        - Early layers capture edges and textures (the cristae lines, cell wall), while later layers capture object identity (the whole mitochondrion).
+    - **Multi-Scale Inference:**
+        - We run the same image through the model at two different resolutions (e.g., $224 \times 224$ and $448 \times 448$) and interpolate the features to match.
+        - we get a "*Zoom-In / Zoom-Out*" perspective. This helps significantly if our datasets have different nanometer resolutions.
+
 
 # Task 3 — Embedding-Based Retrieval & Visualization
 
+### 1. *Within-dataset retrieval:* Visualize how the query mitochondrion's embeddings compare to the embeddings of other mitochondria *within* each dataset.
+- To perform within-dataset retrieval, we leverage the dense, high-dimensional embeddings extracted from the DINOv3 model. Because the model groups semantically similar biological structures closely together in its embedding space, pixels belonging to mitochondria share highly correlated mathematical signatures.
+- To visualize and quantify how a query mitochondrion compares to others in the same dataset, I developed a [WithinDatasetRetrival](./components/within_retrival.py) pipeline that performs mean-pooled querying, cosine similarity heatmapping, and quantitative evaluation.
+    - Selecting a single pixel as a query can introduce noise. Instead, we define a bounding box `[y_min:y_max, x_min:x_max]` defined in [params.yaml](../../params.yaml) around a prominent target mitochondrion in a specific Z-slice.
+    - The embeddings of all pixels within this Region of Interest (ROI) are averaged (mean-pooled) and L2-normalized. This creates a highly robust, `master` query vector for mitochondrial structure.
+    - We compute the *Cosine Similarity* between our normalized query vector and flattened embedding matrix representing every other pixel in the dataset volume.
+    - The dot product yields a full similarity map for the entire image space, ranging from -1.0 (opposite) to 1.0 (identical).
+    - To quantitatively prove that the embeddings successfully capture the target, the pipeline calculates `Precision@k`, `Recall@k`, and an `F1 score`.
+    - We treat pixels inside our initial bounding box as the ground truth positive mask. By ranking all pixels in the image by their similarity score, we can evaluate how many of the `top k` most similar pixels correctly correspond to the target mitochondrial structure, establishing a baseline accuracy for the retrieval system.
+    - To visually analyze retrieval performance, the pipeline generates a comprehensive 4-panel dashboard:
+        - *Raw EM Slice*: Displays the base microscopic image with the target query bounding box highlighted.
+        - *Full Similarity Heatmap*: A full view of the raw cosine similarity scores. Mitochondria in the entire slice are activate with high correlation, while the cytoplasm and background remain different.
+        - *Thresholded Overlay*: A localized view that masks all similarity scores below a designated threshold, visually isolating only the strongest semantic matches overlaying the raw data
+        - *Score Distribution*: A histogram mapping the frequency of the cosine similarity scores, allowing us to empirically select the optimal cutoff threshold to separate signal (i.e, mitochondria) from noise (i.e, background)
+- ***NOTE: Please find the [visualization output images in here](../../OUTPUT/retrival/)***
 
+<div align="center">
+<h3>🔍 Visual Proof of Semantic Understanding</h3>
+
+|||
+|:-----:|:-:|
+|<img src="../../OUTPUT/retrival/ps1.png" width="600px">|<img src="../../OUTPUT/retrival/ls0.png" width="600px">|
+|*Morphological Discrimination of Organelles, model understands true Pancreas mitocondrial semantics*|*capture and retrieve consistent mitochondrial ultrastructure across a mouse Liver slice*|
+|<img src="../../OUTPUT/retrival/hs11.png" width="600px">|<img src="../../OUTPUT/retrival/tnegs0.png" width="600px">|
+|*High-Specificity Thresholding via Score Distribution, cleanly separate target from background.*|*Negative Set:High distinction in selecting Lipid(target) vs mitochondria(negative)*|
+
+</div>
+
+### 2. *Cross-dataset retrieval:* Visualize how the query mitochondrion's embeddings compare to the embeddings of mitochondria *across* the two datasets.
+
+- Cross-dataset retrieval is significantly more challenging than within-dataset retrieval.
+- Because the two datasets (e.g., [Mouse Liver vs. HeLa Cell](../../OUTPUT/crossretrive/pca_lhs0.png)) likely possess varying nanometer-per-voxel resolutions, distinct stains, and different background noise profiles, their raw embedding distributions are mathematically disjointed.
+- I developed a [CrossDatasetRetrival](./components/cross_retrival.py) pipeline that implements distribution alignment, mutual nearest-neighbor grading, and cross-domain heatmapping.
+    - Before cross querying, we must map both embedding spaces into a shared, diverse domain space. we achieve this via `Z-score normalization`
+    - We calculate the global mean (`mu`) and standard deviation (`std`) of the full embedding volume for both Dataset 1 and Dataset 2
+    - By subtracting the dataset specific mean and dividing by the standard deviation for every pixel ($\frac{pixel-mean}{std}$), we center both datasets at the origin of the embedding space with unit variance.
+    - This acts as a normalizer, ensuring the query vector from Dataset 1 can accurately `speak the same language` as the gallery vectors in Dataset 2
+    - To visually prove that this alignment corrects the domain shift, we plot a 2D PCA projection of the embedding space. Before alignment datasets have separate clusters, After alignment distributions overlap.
+    - To mathematically evaluate the quality of the cross-dataset matching, calculate the (Mutual Nearest Neighbor)MNN Rate.
+    - For a selected mitochondrion in Dataset 1, it finds the closest match in Dataset 2. It then reverses the query. If both mitochondria independently select each other as their top match across the domain, it is recorded as a mutual match.
+    - high MNN rate proves the embeddings are highly specific and biologically robust.
+    - we generate a same 4-panel dashboard from above to visualize query retrival
+- ***NOTE: Please find the [visualization output images in here](../../OUTPUT/crossretrive/)***
+
+<div align="center">
+<h3>🔍 Visual Proof of Cross-Dataset Semantic Retrieval and Cross-Dataset Semantic Retrieval</h3>
+
+|||
+|:-----:|:-:|
+|<img src="../../OUTPUT/crossretrive/pca_lhs0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_lhs0.png" width="600px">|
+|*PCA Visualization of Domain Shift and Z-Score Alignment (Liver mitochondria and HeLa mitochondria slices)*|*Cross-Dataset Target Isolation (Liver mitochondria Query -> HeLa mitochondria Target)*|
+|<img src="../../OUTPUT/crossretrive/pca_ps0hs0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_hs0ps11.png" width="600px">|
+|*PCA Visualization of Domain Shift and Z-Score Alignment (Pancreas mitochondria and HeLa mitochondria slices)*|*Cross-Dataset Target Isolation (HeLa mitochondria Query -> Pancreas mitochondria Target)*|
+|<img src="../../OUTPUT/crossretrive/pca_ll.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_ll.png" width="600px">|
+|*PCA Visualization of Domain Shift and Z-Score Alignment (Liver mitochondria chunk1 and Liver mitochondria chunk2 slices)*|*Cross-Dataset Target Isolation (Liver mitochondria chunk1 Query -> Liver mitochondria chunk2 Target)*|
+|<img src="../../OUTPUT/crossretrive/pca_ls0ts0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_ls0ts0.png" width="600px">|
+|*Negative Set: PCA Visualization of Domain Shift and Z-Score Alignment (Liver and Lipid slices)*|*Negative Set: Cross-Dataset Target Isolation (Liver mitochondria Query -> Tcell Lipid Target)*|
+
+</div>
+
+### 3. *Multiple queries:* Describe how you would adapt your visualizations and retrieval strategy if you used multiple query mitochondria instead of one. What changes would you expect in the results?
+
+- To address the high intra-class variance of mitochondria (`pleomorphism`(New word I just learned) across sectioning planes), the retrieval pipeline was upgraded to support [Multi-Query Retrieval](./components/multiquery.py).
+- By selecting multiple distinct mitochondria from the source dataset to act as a support,so that the model can capture a much broader, more robust morphological distribution.
+- The `MultiQueryRetrieval` class implements and quantitatively compares three distinct strategies (like ensemble methods) to handle the $N$ query vectors
+    - *Mean Aggregation (Early Fusion):* We extract the vectors for all $N$ queries, average them into a single Global vector, and perform a single cosine similarity search against the target set.
+    - *Score Fusion (Late Fusion):* We execute $N$ independent searches, generating $N$ distinct cosine similarity heatmaps. We then calculate the pixel-wise average across all heatmaps.
+    - *Reciprocal Rank Fusion (RRF):* This is inspired from RAG systems. We generate $N$ independent ranked lists of pixels. A final fused score is assigned using the formula:( $RRF = \sum \frac{1}{rank + k}$. )RRF heavily penalizes false positives, ensuring that only pixels consistently highly ranked across multiple different queries are retrieved
+    - these three methods are evaluated natively using `Precision@k`, `Recall@k`, and `F1@k` against the ground-truth annotations of the target dataset.
+    - we generate a same panel dashboard from above to visualize query retrival
+- - ***NOTE: Please find the [visualization output images in here](../../OUTPUT/multiquery_viz/)***
+
+<div align="center">
+<h3>🔍 Visual Proof of Cross-Dataset Semantic Retrieval and Cross-Dataset Semantic Retrieval</h3>
+
+|||
+|:-----:|:-:|
+|<img src="../../OUTPUT/multiquery_viz/mq_ls0ls1.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0ls1.png" width="600px">|
+|*Multi-Query Retrieval and Fusion Strategies (Liver mitochondria chunk0 -> Liver mitochondria chunk1)*|*Semantic Neighborhood and a multi-dimensional boundary (illustrated by the convex hull) via Multi-Query PCA*|
+|<img src="../../OUTPUT/multiquery_viz/mq_ls0ps1.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0ps1.png" width="600px">|
+|*Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria -> Pancreas mitochondria)*|*Semantic Neighborhood via Multi-Query PCA*|
+|<img src="../../OUTPUT/multiquery_viz/mq_ls0hs0.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0hs0.png" width="600px">|
+|*Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria -> HeLa mitochondria)*|*Semantic Neighborhood via Multi-Query PCA*|
+|<img src="../../OUTPUT/multiquery_viz/mq_ls0ts0.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mqpcaneg.png" width="600px">|
+|*Negative Set: Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria  -> Tcell Lipid)*|*Negative Set: Semantic Neighborhood via Multi-Query PCA*|
+
+</div>
+
+## Task 4 — Proposal: Improving Mitochondria Detection with Minimal Fine-Tuning
