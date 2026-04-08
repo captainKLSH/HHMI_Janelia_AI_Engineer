@@ -90,11 +90,13 @@ pip install -r requirements.txt
 
 ### 🏛️ Model Architecture
 
-- **Base Model**: DINOv3 ViT-S/16 distilled	21M parameter	trained on:LVD-1689M
+- **Base Model**: $DINOv3 ViT-S plus/16 distilled$ with 29M parameter, trained on:LVD-1689M
 - **Input Size**: 2x3x448x448 [Batch x Channel x Height x Width] (Flexible, patch-based inference supported)
+- **Patch Size**: 16 x 16
 - **Embedding Dimension**: 384 (Per-pixel feature vector size used for retrieval)
 - **Retrieval Metric**: Cosine similarity on L2-normalized embeddings (ensures scale-invariant matching across different datasets)
 - **Inference Strategy**: 3D sliding window with overlap (seamlessly processes massive biological volumes without overwhelming GPU memory)
+- **Key Architecture Upgrades from DINOv2**: SwiGLU Feed-Forward Networks and Rotary Position Embeddings (RoPE) for improved spatial understanding.
 
 ## 📝 3. Project Repository Structure
 ```text
