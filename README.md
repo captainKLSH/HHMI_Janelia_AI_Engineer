@@ -81,12 +81,33 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
+
 ### Key Dependencies
 - `torch>=2.0.0` (alternative for other platforms)
 - `mlflow` (experiment tracking)
 - `dvc>=3.42.0` (data versioning)
 - `numpy`, `pandas`, `tqdm`, `pyyaml`, `python-box`
 - `fibsem-tools>=7.0.5` (Extraction tool)
+
+### Setting up Hugging face CLI
+You can install the hf CLI with a single command:
+```bash
+# On macOS and Linux
+curl -LsSf https://hf.co/cli/install.sh | bash
+
+# On Windows:
+powershell -ExecutionPolicy ByPass -c "irm https://hf.co/cli/install.ps1 | iex"
+```
+The easiest way to use the hf CLI is with uvx. It always runs the latest version in an isolated environment - no installation needed!
+```bash
+uvx hf auth login
+hf auth whoami
+```
+For Gated Model like DINOv3 find [instructions here](https://huggingface.co/docs/hub/models-gated) to unlock the access.
+
+For the access of models through Hugging Face CLI setup `User Access Token`, find [documentation here](https://huggingface.co/docs/hub/en/security-tokens).
+
+>> To use the Load models with Hugging Face pipeline, setup `hf CLI` and `User Access Token`.
 
 ### 🏛️ Model Architecture
 

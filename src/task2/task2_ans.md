@@ -171,7 +171,7 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 
 - Our main objective is to adapt a pre-trained DINOv3 Vision Transformer (ViT) to the specific domain of mitochondria segmentation, minimizing computational overhead and preventing forgetting of the model's generalized feature space.
 
-- Our previous task prove that the off the shelf DINOv3 model understands the fundamental biological semantics, Zero-shot learning can be implemented. But to completely make model completely understand biological semantics (electron microscopy noise, varying staining, specific organelle morphology) we need to use parameter efficient fine-tuning (PEFT) technique.
+- Our previous task prove that the off the shelf DINOv3 model understands the fundamental biological semantics, Zero-shot learning can be implemented. But to completely make model completely understand biological semantics (electron microscopy noise, varying staining, specific organelle morphology) we need to use parameter efficient fine-tuning (PEFT) technique. Find [methodologies paper](https://www.researchgate.net/publication/391480705_Parameter-Efficient_Fine-Tuning_in_Large_Models_A_Survey_of_Methodologies) here.
 - DINOv3 is trained on 1.689 billion images, extracted from a pool of 17 billion public Instagram posts which are natural imagesets. However Microscopy Image images have a distinct texture and noise profile compared to the natural images.
     - **Stratergy 1:**
         - We will use [LowRank Adaptation (LoRA)](https://arxiv.org/abs/2106.09685) proven method on the last N transformer blocks, to freeze the pre trained model weights and inject trainable rank decomposition matrices into the Transformer architecture. Only the low-rank residuals are trained.
