@@ -92,6 +92,7 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 |:-----:|:-:|
 |<img src="../../OUTPUT/retrival/ps1.png" width="600px">|<img src="../../OUTPUT/retrival/ls0.png" width="600px">|
 |*Morphological Discrimination of Organelles, model understands true Pancreas mitocondrial semantics*|*capture and retrieve consistent mitochondrial ultrastructure across a mouse Liver slice*|
+|||
 |<img src="../../OUTPUT/retrival/hs11.png" width="600px">|<img src="../../OUTPUT/retrival/tnegs0.png" width="600px">|
 |*High-Specificity Thresholding via Score Distribution, cleanly separate target from background.*|*Negative Set:High distinction in selecting Lipid(target) vs mitochondria(negative)*|
 
@@ -111,7 +112,9 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
     - For a selected mitochondrion in Dataset 1, it finds the closest match in Dataset 2. It then reverses the query. If both mitochondria independently select each other as their top match across the domain, it is recorded as a mutual match.
     - high MNN rate proves the embeddings are highly specific and biologically robust.
     - we generate a same 4-panel dashboard from above to visualize query retrival
-- ***NOTE: Please find the [visualization output images in here](../../OUTPUT/crossretrive/)***
+
+> [!NOTE] ***Please find the [visualization output images in here](../../OUTPUT/crossretrive/)***
+
 
 <div align="center">
 <h3>🔍 Visual Proof of Overcoming Domain Shift in Feature Space and Cross-Dataset Semantic Retrieval</h3>
@@ -120,10 +123,13 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 |:-----:|:-:|
 |<img src="../../OUTPUT/crossretrive/pca_lhs0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_lhs0.png" width="600px">|
 |*PCA Visualization of Domain Shift and Z-Score Alignment (Liver mitochondria and HeLa mitochondria slices)*|*Cross-Dataset Target Isolation (Liver mitochondria Query -> HeLa mitochondria Target)*|
+|||
 |<img src="../../OUTPUT/crossretrive/pca_ps0hs0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_hs0ps11.png" width="600px">|
 |*PCA Visualization of Domain Shift and Z-Score Alignment (Pancreas mitochondria and HeLa mitochondria slices)*|*Cross-Dataset Target Isolation (HeLa mitochondria Query -> Pancreas mitochondria Target)*|
+|||
 |<img src="../../OUTPUT/crossretrive/pca_ll.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_ll.png" width="600px">|
 |*PCA Visualization of Domain Shift and Z-Score Alignment (Liver mitochondria chunk1 and Liver mitochondria chunk2 slices)*|*Cross-Dataset Target Isolation (Liver mitochondria chunk1 Query -> Liver mitochondria chunk2 Target)*|
+|||
 |<img src="../../OUTPUT/crossretrive/pca_ls0ts0.png" width="600px">|<img src="../../OUTPUT/crossretrive/cross_ls0ts0.png" width="600px">|
 |*Negative Set: PCA Visualization of Domain Shift and Z-Score Alignment (Liver and Lipid slices)*|*Negative Set: Cross-Dataset Target Isolation (Liver mitochondria Query -> Tcell Lipid Target)*|
 
@@ -149,10 +155,13 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 |:-----:|:-:|
 |<img src="../../OUTPUT/multiquery_viz/mq_ls0ls1.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0ls1.png" width="600px">|
 |*Multi-Query Retrieval and Fusion Strategies (Liver mitochondria chunk0 -> Liver mitochondria chunk1)*|*Semantic Neighborhood and a multi-dimensional boundary (illustrated by the convex hull) via Multi-Query PCA*|
+|||
 |<img src="../../OUTPUT/multiquery_viz/mq_ls0ps1.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0ps1.png" width="600px">|
 |*Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria -> Pancreas mitochondria)*|*Semantic Neighborhood via Multi-Query PCA*|
+|||
 |<img src="../../OUTPUT/multiquery_viz/mq_ls0hs0.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mq_pca_ls0hs0.png" width="600px">|
 |*Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria -> HeLa mitochondria)*|*Semantic Neighborhood via Multi-Query PCA*|
+|||
 |<img src="../../OUTPUT/multiquery_viz/mq_ls0ts0.png" width="600px">|<img src="../../OUTPUT/multiquery_viz/mqpcaneg.png" width="600px">|
 |*Negative Set: Cross-Domain Multi-Query Retrieval and Fusion Strategies (Liver mitochondria  -> Tcell Lipid)*|*Negative Set: Semantic Neighborhood via Multi-Query PCA*|
 
@@ -165,19 +174,19 @@ Once the file is safely on the computer, the script runs a quick inspection. It 
 - Our previous task prove that the off the shelf DINOv3 model understands the fundamental biological semantics, Zero-shot learning can be implemented. But to completely make model completely understand biological semantics (electron microscopy noise, varying staining, specific organelle morphology) we need to use parameter efficient fine-tuning (PEFT) technique.
 - DINOv3 is trained on 1.689 billion images, extracted from a pool of 17 billion public Instagram posts which are natural imagesets. However Microscopy Image images have a distinct texture and noise profile compared to the natural images.
     - **Stratergy 1:**
-    - We will use [LowRank Adaptation (LoRA)](https://arxiv.org/abs/2106.09685) proven method on the last N transformer blocks, to freeze the pre trained model weights and inject trainable rank decomposition matrices into the Transformer architecture. Only the low-rank residuals are trained.
-    - we target the Query (Q) and Value (V) projection matrices within the Multi-Head Attention blocks.
-    - LoRA allows the attention mechanism to subtly shift its focus to EM-specific textures (like cristae gradients, mitochondrial wall thinkness) using less than 1% of the original parameter count.
-    - Only the late blocks encode high level semantic context, which is where the natural image context is strongest and most harmful.Adapting only the last 2–4 blocks with rank `r = 8` adds roughly:
-        - params = $2 \times r \times (din + dout) \times Nadaptedblocks \times 4projections$
-        = $2 \times 8 \times (384 + 384) \times 3 \times 4$ ~ 147,000 params   (for vits16plus, 3 blocks)
-    - That is 0.5% of the backbone's 28.7M parameters.
+        - We will use [LowRank Adaptation (LoRA)](https://arxiv.org/abs/2106.09685) proven method on the last N transformer blocks, to freeze the pre trained model weights and inject trainable rank decomposition matrices into the Transformer architecture. Only the low-rank residuals are trained.
+        - we target the Query (Q) and Value (V) projection matrices within the Multi-Head Attention blocks.
+        - LoRA allows the attention mechanism to subtly shift its focus to EM-specific textures (like cristae gradients, mitochondrial wall thinkness) using less than 1% of the original parameter count.
+        - Only the late blocks encode high level semantic context, which is where the natural image context is strongest and most harmful.Adapting only the last 2–4 blocks with rank `r = 8` adds roughly:
+            - params = $2 \times r \times (din + dout) \times Nadaptedblocks \times 4projections$
+            = $2 \times 8 \times (384 + 384) \times 3 \times 4$ ~ 147,000 params   (for vits16plus, 3 blocks)
+        - That is 0.5% of the backbone's 28.7M parameters.
     - **Stratergy 2:**
-    - we use adapter layers between encoder and decoder called **Linear Probing** (Classifier-Level Adaptation), The adapter learns a domain-specific projection that remaps the natural-image feature distribution into the Microscopy tissue image feature distribution before the decoder.
-    - This is faster to converge than LoRA because there are fewer parameters and the gradient path is shorter.
+        - we use adapter layers between encoder and decoder called **Linear Probing** (Classifier-Level Adaptation), The adapter learns a domain-specific projection that remaps the natural-image feature distribution into the Microscopy tissue image feature distribution before the decoder.
+        - This is faster to converge than LoRA because there are fewer parameters and the gradient path is shorter.
     - **Stratergy 3:**
-    - we run a short self-supervised fine tuning pass of the DINOv3, on your unlabelled microscopy volumes. This shifts the embedding distribution toward microscopy tissue before any segmentation training begins. Use the resulting weights as the initialisation.
-    - During backpropagation, only these specific prompt tokens are updated.
+        - we run a short self-supervised fine tuning pass of the DINOv3, on your unlabelled microscopy volumes. This shifts the embedding distribution toward microscopy tissue before any segmentation training begins. Use the resulting weights as the initialisation.
+        - During backpropagation, only these specific prompt tokens are updated.
 
 - ViTs process at a single scale, but biological structures vary vastly in size. We will extract feature maps from intermediate layers (e.g., layers 3, 6, 9, and 12) to capture both high resolution edges (early layers) and deep semantic context (late layers).
 - We will append a lightweight simplified U-Net style decoder. This head will consist of a few standard transposed convolutions and upsampling layers to fuse the multi-scale features and project the 384-dimensional embeddings down to a 2D binary mask
